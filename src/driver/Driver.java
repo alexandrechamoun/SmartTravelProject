@@ -11,6 +11,7 @@ package driver;
 
 import java.util.Scanner;
 
+// Import all exception classes
 import exceptions.DuplicateEmailException;
 import exceptions.EntityNotFoundException;
 import exceptions.InvalidClientDataException;
@@ -18,6 +19,7 @@ import exceptions.InvalidTripDataException;
 import exceptions.InvalidTransportDataException;
 import exceptions.InvalidAccommodationDataException;
 
+// import all classes
 import client.Client;
 import travel.Accommodation;
 import travel.Bus;
@@ -29,9 +31,7 @@ import travel.Transportation;
 import travel.Trip;
 
 public class Driver {
-
 	public static void main(String[] args) {
-
 		Scanner scanner = new Scanner(System.in);
 		int userChoice;
 
@@ -63,9 +63,9 @@ public class Driver {
 
 	// ========================= PREDEFINED SCENARIO ===========================
 	public static void predefinedScenario() {
-		System.out.println("╔═════════════════════════════════════════════╗");
-		System.out.println("║     SMARTTRAVEL A2 - PREDEFINED SCENARIO    ║");
-		System.out.println("╚═════════════════════════════════════════════╝");
+		System.out.println("===============================================");
+		System.out.println("    SMART TRAVEL A2 - PREDEFINED SCENARIO      ");
+		System.out.println("===============================================");
 		System.out.println("This scenario demonstrates:");
 		System.out.println("  1. Valid object creation (happy path)");
 		System.out.println("  2. All 6 custom exceptions being triggered and caught");
@@ -78,9 +78,9 @@ public class Driver {
 		// ================================================================
 		// PART 1 — VALID OBJECT CREATION (HAPPY PATH)
 		// ================================================================
-		System.out.println("════════════════════════════════════════════════");
+		System.out.println("===============================================");
 		System.out.println("       PART 1: Valid Object Creation");
-		System.out.println("════════════════════════════════════════════════");
+		System.out.println("===============================================");
 
 		// ----- Valid Clients -----
 		Client c1 = null, c2 = null, c3 = null;
@@ -88,7 +88,7 @@ public class Driver {
 			c1 = new Client("Alexandre", "Chamoun", "alex@gmail.com");
 			c2 = new Client("John", "Doe", "doe@gmail.com");
 			c3 = new Client("Marc", "Smith", "marc@gmail.com");
-			System.out.println("[OK] 3 clients created successfully.");
+			System.out.println("3 clients created successfully.");
 		} catch (InvalidClientDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -110,7 +110,7 @@ public class Driver {
 		try {
 			f1 = new Flight("Air Canada", "Montreal", "London", "Air Canada", 25, 500.00);
 			f2 = new Flight("Porter", "Montreal", "Fort Lauderdale", "Porter Airlines", 15, 275.00);
-			System.out.println("[OK] 2 flights created successfully.");
+			System.out.println("2 flights created successfully.");
 		} catch (InvalidTransportDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -118,7 +118,7 @@ public class Driver {
 		try {
 			t1 = new Train("Eurostar", "Paris", "Nice", "Regional", "Economy", 80.00);
 			t2 = new Train("Alta Velocidad Española", "Madrid", "Barcelona", "High-Speed", "First Class", 110.00);
-			System.out.println("[OK] 2 trains created successfully.");
+			System.out.println("2 trains created successfully.");
 		} catch (InvalidTransportDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -126,7 +126,7 @@ public class Driver {
 		try {
 			b1 = new Bus("FlixBus", "Berlin", "Amsterdam", "FlixBus", 4, 24.99);
 			b2 = new Bus("MegaBus", "Chicago", "Indianapolis", "MegaBus", 3, 14.99);
-			System.out.println("[OK] 2 buses created successfully.");
+			System.out.println("2 buses created successfully.");
 		} catch (InvalidTransportDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -179,7 +179,7 @@ public class Driver {
 			trip1 = new Trip("London", 5, 100.00, c1);
 			trip1.setTransportation(f1);
 			trip1.setAccommodation(h2);
-			System.out.println("[OK] Trip 1 (London) created successfully.");
+			System.out.println("Trip 1 (London) created successfully.");
 		} catch (InvalidTripDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -188,7 +188,7 @@ public class Driver {
 			trip2 = new Trip("Amsterdam", 3, 100.00, c2);
 			trip2.setTransportation(b1);
 			trip2.setAccommodation(hs1);
-			System.out.println("[OK] Trip 2 (Amsterdam) created successfully.");
+			System.out.println("Trip 2 (Amsterdam) created successfully.");
 		} catch (InvalidTripDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -197,7 +197,7 @@ public class Driver {
 			trip3 = new Trip("Nice", 5, 100.00, c3);
 			trip3.setTransportation(t1);
 			trip3.setAccommodation(hs2);
-			System.out.println("[OK] Trip 3 (Nice) created successfully.");
+			System.out.println("Trip 3 (Nice) created successfully.");
 		} catch (InvalidTripDataException e) {
 			System.out.println("[ERROR] " + e.getMessage());
 		}
@@ -215,9 +215,9 @@ public class Driver {
 		// ================================================================
 		// PART 2 — EXCEPTION DEMONSTRATIONS
 		// ================================================================
-		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("\n===============================================");
 		System.out.println("  PART 2: Exception Handling Demonstrations");
-		System.out.println("════════════════════════════════════════════════");
+		System.out.println("===============================================");
 
 
 		// ------ 1. InvalidClientDataException ------
@@ -431,9 +431,9 @@ public class Driver {
 		// ================================================================
 		// PART 3 — POLYMORPHIC COST CALCULATION
 		// ================================================================
-		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("\n===============================================");
 		System.out.println("    PART 3: Polymorphic Cost Calculation");
-		System.out.println("════════════════════════════════════════════════");
+		System.out.println("===============================================");
 		for (int i = 0; i < trips.length; i++) {
 			if (trips[i] != null)
 				System.out.println(trips[i].getTripId() + " to " + trips[i].getDestination()
@@ -453,9 +453,9 @@ public class Driver {
 		// ================================================================
 		// PART 4 — DEEP COPY VERIFICATION
 		// ================================================================
-		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("\n===============================================");
 		System.out.println("    PART 4: Deep Copy Verification");
-		System.out.println("════════════════════════════════════════════════");
+		System.out.println("===============================================");
 
 		Transportation[] copiedTransport = copyTransportationArray(transportations);
 		try {
@@ -477,9 +477,9 @@ public class Driver {
 		// ================================================================
 		// PART 5 — EQUALS() METHOD TESTING
 		// ================================================================
-		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("\n===============================================");
 		System.out.println("    PART 5: equals() Method Testing");
-		System.out.println("════════════════════════════════════════════════");
+		System.out.println("===============================================");
 
 		System.out.print("  Client vs Trip (different classes): ");
 		System.out.println(c1.equals(trip1) + " (expected: false)");
@@ -508,9 +508,9 @@ public class Driver {
 		System.out.print("  flight1 vs flightCopy (identical attributes): ");
 		System.out.println(f1.equals(flightCopy) + " (expected: true)");
 
-		System.out.println("\n╔══════════════════════════════════════════════╗");
-		System.out.println("║       END OF PREDEFINED SCENARIO             ║");
-		System.out.println("╚══════════════════════════════════════════════╝");
+		System.out.println("\n===============================================");
+		System.out.println("      END OF PREDEFINED SCENARIO            ");
+		System.out.println("===============================================");
 	}
 
 
