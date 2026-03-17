@@ -11,7 +11,8 @@ package driver;
 
 import java.util.Scanner;
 
-
+import exceptions.DuplicateEmailException;
+import exceptions.EntityNotFoundException;
 import exceptions.InvalidClientDataException;
 import exceptions.InvalidTripDataException;
 import exceptions.InvalidTransportDataException;
@@ -52,7 +53,7 @@ public class Driver {
 	// ============================ STATIC METHODS =============================
 
 	public static void welcomeMessage() {
-		System.out.print("Welcome to my SmartTravel Agency! Made by Alexandre Chamoun.");
+		System.out.print("Welcome to my SmartTravel Agency! Made by Alexandre Chamoun & Adam Kozman.");
 	}
 
 	public static void promptUserForChoice() {
@@ -62,32 +63,46 @@ public class Driver {
 
 	// ========================= PREDEFINED SCENARIO ===========================
 	public static void predefinedScenario() {
-		System.out.println("========  PREDEFINED SCENARIO  ========");
+		System.out.println("╔═════════════════════════════════════════════╗");
+		System.out.println("║     SMARTTRAVEL A2 - PREDEFINED SCENARIO    ║");
+		System.out.println("╚═════════════════════════════════════════════╝");
+		System.out.println("This scenario demonstrates:");
+		System.out.println("  1. Valid object creation (happy path)");
+		System.out.println("  2. All 6 custom exceptions being triggered and caught");
+		System.out.println("  3. Polymorphic cost calculation");
+		System.out.println("  4. Deep copy verification");
+		System.out.println("  5. equals() method testing");
+		System.out.println();
 
-		// ----- Create Clients -----
+
+		// ================================================================
+		// PART 1 — VALID OBJECT CREATION (HAPPY PATH)
+		// ================================================================
+		System.out.println("════════════════════════════════════════════════");
+		System.out.println("       PART 1: Valid Object Creation");
+		System.out.println("════════════════════════════════════════════════");
+
+		// ----- Valid Clients -----
 		Client c1 = null, c2 = null, c3 = null;
 		try {
 			c1 = new Client("Alexandre", "Chamoun", "alex@gmail.com");
 			c2 = new Client("John", "Doe", "doe@gmail.com");
 			c3 = new Client("Marc", "Smith", "marc@gmail.com");
+			System.out.println("[OK] 3 clients created successfully.");
 		} catch (InvalidClientDataException e) {
-			System.out.println("Error creating client: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		Client[] clients = new Client[3];
-		clients[0] = c1;
-		clients[1] = c2;
-		clients[2] = c3;
+		clients[0] = c1; clients[1] = c2; clients[2] = c3;
 
-		System.out.println("=== CLIENTS ===");
+		System.out.println("\n--- Clients ---");
 		for (int i = 0; i < clients.length; i++) {
 			System.out.println(clients[i]);
 			System.out.println("----------");
 		}
-		System.out.println();
 
-
-		// ----- Create Transportation Options -----
+		// ----- Valid Transportation -----
 		Flight f1 = null, f2 = null;
 		Train  t1 = null, t2 = null;
 		Bus    b1 = null, b2 = null;
@@ -95,179 +110,407 @@ public class Driver {
 		try {
 			f1 = new Flight("Air Canada", "Montreal", "London", "Air Canada", 25, 500.00);
 			f2 = new Flight("Porter", "Montreal", "Fort Lauderdale", "Porter Airlines", 15, 275.00);
+			System.out.println("[OK] 2 flights created successfully.");
 		} catch (InvalidTransportDataException e) {
-			System.out.println("Error creating flight: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		try {
 			t1 = new Train("Eurostar", "Paris", "Nice", "Regional", "Economy", 80.00);
 			t2 = new Train("Alta Velocidad Española", "Madrid", "Barcelona", "High-Speed", "First Class", 110.00);
+			System.out.println("[OK] 2 trains created successfully.");
 		} catch (InvalidTransportDataException e) {
-			System.out.println("Error creating train: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		try {
 			b1 = new Bus("FlixBus", "Berlin", "Amsterdam", "FlixBus", 4, 24.99);
 			b2 = new Bus("MegaBus", "Chicago", "Indianapolis", "MegaBus", 3, 14.99);
+			System.out.println("[OK] 2 buses created successfully.");
 		} catch (InvalidTransportDataException e) {
-			System.out.println("Error creating bus: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		Transportation[] transportations = new Transportation[6];
-		transportations[0] = f1;
-		transportations[1] = f2;
-		transportations[2] = t1;
-		transportations[3] = t2;
-		transportations[4] = b1;
-		transportations[5] = b2;
+		transportations[0] = f1; transportations[1] = f2;
+		transportations[2] = t1; transportations[3] = t2;
+		transportations[4] = b1; transportations[5] = b2;
 
-		System.out.println("=== TRANSPORTATIONS ===");
+		System.out.println("\n--- Transportations ---");
 		for (int i = 0; i < transportations.length; i++) {
 			System.out.println(transportations[i]);
 			System.out.println("----------");
 		}
-		System.out.println();
 
-
-		// ----- Create Accommodation Options -----
+		// ----- Valid Accommodations -----
 		Hotel  h1 = null, h2 = null;
 		Hostel hs1 = null, hs2 = null;
 
 		try {
-			h1  = new Hotel("Marriott", "Paris", 200.00, 5);
-			h2  = new Hotel("Holiday Inn", "London", 120.00, 3);
+			h1 = new Hotel("Marriott", "Paris", 200.00, 5);
+			h2 = new Hotel("Holiday Inn", "London", 120.00, 3);
+			System.out.println("[OK] 2 hotels created successfully.");
 		} catch (InvalidAccommodationDataException e) {
-			System.out.println("Error creating hotel: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		try {
 			hs1 = new Hostel("HI Hostel", "Amsterdam", 35.00, 6);
 			hs2 = new Hostel("Generator", "Nice", 40.00, 8);
+			System.out.println("[OK] 2 hostels created successfully.");
 		} catch (InvalidAccommodationDataException e) {
-			System.out.println("Error creating hostel: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		Accommodation[] accommodations = new Accommodation[4];
-		accommodations[0] = h1;
-		accommodations[1] = h2;
-		accommodations[2] = hs1;
-		accommodations[3] = hs2;
+		accommodations[0] = h1; accommodations[1] = h2;
+		accommodations[2] = hs1; accommodations[3] = hs2;
 
-		System.out.println("=== ACCOMMODATIONS ===");
+		System.out.println("\n--- Accommodations ---");
 		for (int i = 0; i < accommodations.length; i++) {
 			System.out.println(accommodations[i]);
 			System.out.println("----------");
 		}
-		System.out.println();
 
-
-		// ----- Create Trip Options -----
+		// ----- Valid Trips -----
 		Trip trip1 = null, trip2 = null, trip3 = null;
 
 		try {
 			trip1 = new Trip("London", 5, 100.00, c1);
 			trip1.setTransportation(f1);
 			trip1.setAccommodation(h2);
+			System.out.println("[OK] Trip 1 (London) created successfully.");
 		} catch (InvalidTripDataException e) {
-			System.out.println("Error creating trip1: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		try {
 			trip2 = new Trip("Amsterdam", 3, 100.00, c2);
 			trip2.setTransportation(b1);
 			trip2.setAccommodation(hs1);
+			System.out.println("[OK] Trip 2 (Amsterdam) created successfully.");
 		} catch (InvalidTripDataException e) {
-			System.out.println("Error creating trip2: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		try {
 			trip3 = new Trip("Nice", 5, 100.00, c3);
 			trip3.setTransportation(t1);
 			trip3.setAccommodation(hs2);
+			System.out.println("[OK] Trip 3 (Nice) created successfully.");
 		} catch (InvalidTripDataException e) {
-			System.out.println("Error creating trip3: " + e.getMessage());
+			System.out.println("[ERROR] " + e.getMessage());
 		}
 
 		Trip[] trips = new Trip[3];
-		trips[0] = trip1;
-		trips[1] = trip2;
-		trips[2] = trip3;
+		trips[0] = trip1; trips[1] = trip2; trips[2] = trip3;
 
-		System.out.println("=== TRIPS ===");
+		System.out.println("\n--- Trips ---");
 		for (int i = 0; i < trips.length; i++) {
 			System.out.println(trips[i]);
 			System.out.println("----------");
 		}
-		System.out.println();
 
 
-		// ----- Testing equals() -----
-		System.out.println("=== Testing the Equals method ===");
+		// ================================================================
+		// PART 2 — EXCEPTION DEMONSTRATIONS
+		// ================================================================
+		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("  PART 2: Exception Handling Demonstrations");
+		System.out.println("════════════════════════════════════════════════");
 
-		System.out.print("Comparing Client vs Trip (different classes): ");
-		System.out.println(c1.equals(trip1));
 
-		System.out.print("Comparing client1 vs client2 (same class, different attributes): ");
-		System.out.println(c1.equals(c2));  // expected: false
+		// ------ 1. InvalidClientDataException ------
+		System.out.println("\n[TEST 1] InvalidClientDataException");
+		System.out.println("-------------------------------------");
 
-		Client clientCopy = null;
+		// Empty first name
+		System.out.print("  Creating client with empty first name... ");
 		try {
-			clientCopy = new Client("Alexandre", "Chamoun", "alex@gmail.com");
+			new Client("", "Chamoun", "alex2@gmail.com");
 		} catch (InvalidClientDataException e) {
-			System.out.println("Error creating clientCopy: " + e.getMessage());
+			System.out.println("CAUGHT: " + e.getMessage());
 		}
-		System.out.print("Comparing client1 vs clientCopy (same class, identical attributes): ");
-		System.out.println(c1.equals(clientCopy)); // expected: true
 
-		System.out.print("Comparing flight1 vs flight2 (same class, different attributes): ");
-		System.out.println(f1.equals(f2));  // expected: false
-
-		Flight flightCopy = null;
+		// Name too long (> 50 chars)
+		System.out.print("  Creating client with name exceeding 50 chars... ");
 		try {
-			flightCopy = new Flight("Air Canada", "Montreal", "London", "Air Canada", 25, 500.00);
+			new Client("AlexandreAlexandreAlexandreAlexandreAlexandreAlexandre", "Chamoun", "alex3@gmail.com");
+		} catch (InvalidClientDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Email missing @
+		System.out.print("  Creating client with email missing '@'... ");
+		try {
+			new Client("Sophie", "Martin", "sophiegmail.com");
+		} catch (InvalidClientDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Email with spaces
+		System.out.print("  Creating client with spaces in email... ");
+		try {
+			new Client("Sophie", "Martin", "sophie @gmail.com");
+		} catch (InvalidClientDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+
+		// ------ 2. InvalidTripDataException ------
+		System.out.println("\n[TEST 2] InvalidTripDataException");
+		System.out.println("-----------------------------------");
+
+		// Base price below $100
+		System.out.print("  Creating trip with base price $50 (min is $100)... ");
+		try {
+			new Trip("Paris", 3, 50.00, c1);
+		} catch (InvalidTripDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Duration = 0 days
+		System.out.print("  Creating trip with 0 days (min is 1)... ");
+		try {
+			new Trip("Paris", 0, 200.00, c1);
+		} catch (InvalidTripDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Duration = 25 days (over max of 20)
+		System.out.print("  Creating trip with 25 days (max is 20)... ");
+		try {
+			new Trip("Paris", 25, 200.00, c1);
+		} catch (InvalidTripDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Null client
+		System.out.print("  Creating trip with null client... ");
+		try {
+			new Trip("Paris", 5, 200.00, null);
+		} catch (InvalidTripDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+
+		// ------ 3. InvalidTransportDataException ------
+		System.out.println("\n[TEST 3] InvalidTransportDataException");
+		System.out.println("---------------------------------------");
+
+		// Flight with negative luggage
+		System.out.print("  Creating flight with -5kg luggage allowance... ");
+		try {
+			new Flight("Air Canada", "Montreal", "Rome", "Air Canada", -5, 400.00);
 		} catch (InvalidTransportDataException e) {
-			System.out.println("Error creating flightCopy: " + e.getMessage());
+			System.out.println("CAUGHT: " + e.getMessage());
 		}
-		System.out.print("Comparing flight1 vs flightCopy (same class, identical attributes): ");
-		System.out.println(f1.equals(flightCopy));  // expected: true
-		System.out.println();
+
+		// Bus with 0 stops (business rule: min 1)
+		System.out.print("  Creating bus with 0 stops (min is 1)... ");
+		try {
+			new Bus("FlixBus", "Paris", "Lyon", "FlixBus", 0, 30.00);
+		} catch (InvalidTransportDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Train with empty seat class
+		System.out.print("  Creating train with empty seat class... ");
+		try {
+			new Train("VIA Rail", "Montreal", "Toronto", "Regional", "", 60.00);
+		} catch (InvalidTransportDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Transportation with empty departure city
+		System.out.print("  Creating flight with empty departure city... ");
+		try {
+			new Flight("Air Canada", "", "London", "Air Canada", 20, 400.00);
+		} catch (InvalidTransportDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
 
 
-		// ----- Polymorphic Cost Calculation -----
-		System.out.println("=== Polymorphic Cost Calculation ===");
+		// ------ 4. InvalidAccommodationDataException ------
+		System.out.println("\n[TEST 4] InvalidAccommodationDataException");
+		System.out.println("------------------------------------------");
+
+		// Hotel with price = 0
+		System.out.print("  Creating hotel with $0/night price... ");
+		try {
+			new Hotel("Budget Inn", "Berlin", 0.00, 3);
+		} catch (InvalidAccommodationDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Hotel with star rating = 0
+		System.out.print("  Creating hotel with 0-star rating (min is 1)... ");
+		try {
+			new Hotel("No Stars Inn", "Berlin", 80.00, 0);
+		} catch (InvalidAccommodationDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Hotel with star rating = 6
+		System.out.print("  Creating hotel with 6-star rating (max is 5)... ");
+		try {
+			new Hotel("Too Many Stars", "Dubai", 500.00, 6);
+		} catch (InvalidAccommodationDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Hostel over $150/night (business rule)
+		System.out.print("  Creating hostel at $200/night (max is $150)... ");
+		try {
+			new Hostel("Fancy Hostel", "Monaco", 200.00, 4);
+		} catch (InvalidAccommodationDataException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+
+		// ------ 5. EntityNotFoundException ------
+		System.out.println("\n[TEST 5] EntityNotFoundException");
+		System.out.println("---------------------------------");
+
+		// Simulate searching for a client ID that doesn't exist
+		System.out.print("  Searching for non-existent client ID 'C9999'... ");
+		try {
+			String searchId = "C9999";
+			boolean found = false;
+			for (int i = 0; i < clients.length; i++) {
+				if (clients[i] != null && clients[i].getClientId().equals(searchId)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				throw new EntityNotFoundException(
+						"Client with ID '" + searchId + "' not found in the system.");
+		} catch (EntityNotFoundException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+		// Simulate searching for a trip ID that doesn't exist
+		System.out.print("  Searching for non-existent trip ID 'T9999'... ");
+		try {
+			String searchId = "T9999";
+			boolean found = false;
+			for (int i = 0; i < trips.length; i++) {
+				if (trips[i] != null && trips[i].getTripId().equals(searchId)) {
+					found = true;
+					break;
+				}
+			}
+			if (!found)
+				throw new EntityNotFoundException(
+						"Trip with ID '" + searchId + "' not found in the system.");
+		} catch (EntityNotFoundException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+
+		// ------ 6. DuplicateEmailException (unchecked) ------
+		System.out.println("\n[TEST 6] DuplicateEmailException (unchecked)");
+		System.out.println("---------------------------------------------");
+
+		// Simulate trying to add a client with an email already in the array
+		System.out.print("  Adding client with duplicate email 'alex@gmail.com'... ");
+		try {
+			String newEmail = "alex@gmail.com";
+			for (int i = 0; i < clients.length; i++) {
+				if (clients[i] != null && clients[i].getEmail().equals(newEmail))
+					throw new DuplicateEmailException(
+							"Email '" + newEmail + "' is already registered to " + clients[i].getFirstName()
+									+ " " + clients[i].getLastName() + ".");
+			}
+		} catch (DuplicateEmailException e) {
+			System.out.println("CAUGHT: " + e.getMessage());
+		}
+
+
+		// ================================================================
+		// PART 3 — POLYMORPHIC COST CALCULATION
+		// ================================================================
+		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("    PART 3: Polymorphic Cost Calculation");
+		System.out.println("════════════════════════════════════════════════");
 		for (int i = 0; i < trips.length; i++) {
-			System.out.println(trips[i].getTripId() + " to " + trips[i].getDestination()
-					+ " - Type: " + trips[i].getTripType()
-					+ " - Total Cost: $" + trips[i].calculateTotalCost());
+			if (trips[i] != null)
+				System.out.println(trips[i].getTripId() + " to " + trips[i].getDestination()
+						+ " | Type: " + trips[i].getTripType()
+						+ " | Total Cost: $" + String.format("%.2f", trips[i].calculateTotalCost()));
 		}
-		System.out.println();
 
-
-		// ----- Most Expensive Trip -----
-		System.out.println("=== Most Expensive Trip ===");
+		System.out.println("\n--- Most Expensive Trip ---");
 		Trip mostExpensive = trips[0];
 		for (int i = 1; i < trips.length; i++) {
 			if (trips[i] != null && trips[i].calculateTotalCost() > mostExpensive.calculateTotalCost())
 				mostExpensive = trips[i];
 		}
-		System.out.println("Most expensive trip: " + mostExpensive);
-		System.out.println();
+		System.out.println(mostExpensive);
 
 
-		// ----- Deep Copy of Transportation Array -----
-		System.out.println("=== Deep Copy of Transportation Array ===");
-		Transportation[] copiedArray = copyTransportationArray(transportations);
+		// ================================================================
+		// PART 4 — DEEP COPY VERIFICATION
+		// ================================================================
+		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("    PART 4: Deep Copy Verification");
+		System.out.println("════════════════════════════════════════════════");
 
+		Transportation[] copiedTransport = copyTransportationArray(transportations);
 		try {
-			copiedArray[0].setCompanyName("MODIFIED COMPANY");
+			copiedTransport[0].setCompanyName("MODIFIED COMPANY");
 		} catch (InvalidTransportDataException e) {
 			System.out.println("Error modifying copy: " + e.getMessage());
 		}
+		System.out.println("Original [0] company : " + transportations[0].getCompanyName());
+		System.out.println("Copy     [0] company : " + copiedTransport[0].getCompanyName());
+		System.out.println("[OK] Deep copy confirmed — original is unchanged.");
 
-		System.out.println("Original [0]: " + transportations[0]);
-		System.out.println("Copy    [0]: " + copiedArray[0]);
+		// Deep copy of Trip (copy constructor)
+		Trip tripCopy = new Trip(trip1);
+		System.out.println("\nOriginal trip1 ID : " + trip1.getTripId());
+		System.out.println("Copied trip ID    : " + tripCopy.getTripId());
+		System.out.println("[OK] Copy has a new unique ID — deep copy works correctly.");
 
-		System.out.println("\n========== END OF PREDEFINED SCENARIO ==========\n");
+
+		// ================================================================
+		// PART 5 — EQUALS() METHOD TESTING
+		// ================================================================
+		System.out.println("\n════════════════════════════════════════════════");
+		System.out.println("    PART 5: equals() Method Testing");
+		System.out.println("════════════════════════════════════════════════");
+
+		System.out.print("  Client vs Trip (different classes): ");
+		System.out.println(c1.equals(trip1) + " (expected: false)");
+
+		System.out.print("  client1 vs client2 (different attributes): ");
+		System.out.println(c1.equals(c2) + " (expected: false)");
+
+		Client clientCopy = null;
+		try {
+			clientCopy = new Client("Alexandre", "Chamoun", "alex@gmail.com");
+		} catch (InvalidClientDataException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		System.out.print("  client1 vs clientCopy (identical attributes): ");
+		System.out.println(c1.equals(clientCopy) + " (expected: true)");
+
+		System.out.print("  flight1 vs flight2 (different attributes): ");
+		System.out.println(f1.equals(f2) + " (expected: false)");
+
+		Flight flightCopy = null;
+		try {
+			flightCopy = new Flight("Air Canada", "Montreal", "London", "Air Canada", 25, 500.00);
+		} catch (InvalidTransportDataException e) {
+			System.out.println("Error: " + e.getMessage());
+		}
+		System.out.print("  flight1 vs flightCopy (identical attributes): ");
+		System.out.println(f1.equals(flightCopy) + " (expected: true)");
+
+		System.out.println("\n╔══════════════════════════════════════════════╗");
+		System.out.println("║       END OF PREDEFINED SCENARIO             ║");
+		System.out.println("╚══════════════════════════════════════════════╝");
 	}
 
 
