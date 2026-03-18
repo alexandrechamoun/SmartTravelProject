@@ -25,59 +25,59 @@ import java.io.IOException;
  */
 public class TripChartGenerator {
 
-	/**
-	 * Applies consistent font styling to charts.
-	 *
-	 * @param chart the chart to style
-	 */
-	private static void applyChartStyling(JFreeChart chart) {
+    /**
+     * Applies consistent font styling to charts.
+     *
+     * @param chart the chart to style
+     */
+    private static void applyChartStyling(JFreeChart chart) {
 
-		Font titleFont = new Font("Bookman Old Style", Font.BOLD, 36);
+        Font titleFont = new Font("Bookman Old Style", Font.BOLD, 36);
         Font axisLabelFont = new Font("Bookman Old Style", Font.BOLD, 27);
         Font tickLabelFont = new Font("Bookman Old Style", Font.PLAIN, 18);
         Font legendFont = new Font("Bookman Old Style", Font.BOLD, 23);
         Font pieLabelFont = new Font("Bookman Old Style", Font.ITALIC, 23);
-        
-	    // Title
-	    chart.getTitle().setFont(titleFont);
 
-	    // Legend
-	    if (chart.getLegend() != null) {
-	        chart.getLegend().setItemFont(legendFont);
-	    }
+        // Title
+        chart.getTitle().setFont(titleFont);
 
-	    // Category & Line charts
-	    if (chart.getPlot() instanceof CategoryPlot) {
-	        CategoryPlot plot = (CategoryPlot) chart.getPlot();
+        // Legend
+        if (chart.getLegend() != null) {
+            chart.getLegend().setItemFont(legendFont);
+        }
 
-	        CategoryAxis domainAxis = plot.getDomainAxis();
-	        ValueAxis rangeAxis = plot.getRangeAxis();
+        // Category & Line charts
+        if (chart.getPlot() instanceof CategoryPlot) {
+            CategoryPlot plot = (CategoryPlot) chart.getPlot();
 
-	        domainAxis.setLabelFont(axisLabelFont);
-	        domainAxis.setTickLabelFont(tickLabelFont);
+            CategoryAxis domainAxis = plot.getDomainAxis();
+            ValueAxis rangeAxis = plot.getRangeAxis();
 
-	        rangeAxis.setLabelFont(axisLabelFont);
-	        rangeAxis.setTickLabelFont(tickLabelFont);
-	    }
+            domainAxis.setLabelFont(axisLabelFont);
+            domainAxis.setTickLabelFont(tickLabelFont);
 
-	    // Pie charts
-	    if (chart.getPlot() instanceof PiePlot) {
-	    	@SuppressWarnings("unchecked")
-	    	PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
+            rangeAxis.setLabelFont(axisLabelFont);
+            rangeAxis.setTickLabelFont(tickLabelFont);
+        }
 
-	    	plot.setLabelFont(pieLabelFont);
+        // Pie charts
+        if (chart.getPlot() instanceof PiePlot) {
+            @SuppressWarnings("unchecked")
+            PiePlot<String> plot = (PiePlot<String>) chart.getPlot();
 
-	        plot.setBackgroundPaint(Color.WHITE);
-	        plot.setOutlineVisible(false);
-	        plot.setSectionOutlinesVisible(false);
-	        plot.setShadowPaint(null); // Remove default shadow
-	        plot.setLabelBackgroundPaint(new Color(245, 245, 245, 180)); // Transparent label background
-	    	
-	    }
-	}
+            plot.setLabelFont(pieLabelFont);
 
-	
-	/**
+            plot.setBackgroundPaint(Color.WHITE);
+            plot.setOutlineVisible(false);
+            plot.setSectionOutlinesVisible(false);
+            plot.setShadowPaint(null); // Remove default shadow
+            plot.setLabelBackgroundPaint(new Color(245, 245, 245, 180)); // Transparent label background
+
+        }
+    }
+
+
+    /**
      * Generates a Bar chart showing total cost per trip.
      *
      * @param trips array of Trip objects
@@ -96,9 +96,10 @@ public class TripChartGenerator {
                 "Cost ($)",
                 dataset
         );
-        
+
         applyChartStyling(chart);
-        ChartUtils.saveChartAsPNG(new File("output/trip_cost_bar_chart.png"), chart, 800, 600);
+        new File("output/charts").mkdirs();
+        ChartUtils.saveChartAsPNG(new File("output/charts/trip_cost_bar_chart.png"), chart, 800, 600);
     }
 
     /**
@@ -109,8 +110,8 @@ public class TripChartGenerator {
      * @throws IOException if PNG file cannot be written
      */
     public static void generateDestinationPieChart(Trip[] trips, int count) throws IOException {
-        
-    	DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
+
+        DefaultPieDataset<String> dataset = new DefaultPieDataset<>();
 
         // Count trips per destination
         for (int i = 0; i < count; i++) {
@@ -131,7 +132,8 @@ public class TripChartGenerator {
                 false
         );
         applyChartStyling(chart);
-        ChartUtils.saveChartAsPNG(new File("output/trips_per_destination_pie.png"), chart, 800, 600);
+        new File("output/charts").mkdirs();
+        ChartUtils.saveChartAsPNG(new File("output/charts/trips_per_destination_pie.png"), chart, 800, 600);
     }
 
     /**
@@ -154,14 +156,15 @@ public class TripChartGenerator {
                 dataset
         );
         applyChartStyling(chart);
-        
+
         CategoryPlot plot = chart.getCategoryPlot();
         LineAndShapeRenderer renderer = (LineAndShapeRenderer) plot.getRenderer();
         renderer.setSeriesStroke(0, new BasicStroke(3.0f));
         renderer.setSeriesPaint(0, Color.MAGENTA);
         renderer.setSeriesShapesVisible(0, true);
         renderer.setSeriesShapesFilled(0, true);
-        
-        ChartUtils.saveChartAsPNG(new File("output/trip_duration_line_chart.png"), chart, 800, 600);
+
+        new File("output/charts").mkdirs();
+        ChartUtils.saveChartAsPNG(new File("output/charts/trip_duration_line_chart.png"), chart, 800, 600);
     }
 }

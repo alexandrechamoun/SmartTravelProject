@@ -10,7 +10,7 @@
 //   Menu 9:  Save All Data to Files
 //   Menu 10: Run Predefined Scenario
 //   Menu 11: Generate Dashboard
-//   Menu 12: Exit
+//   Menu 0:  Exit
 
 package driver;
 
@@ -55,12 +55,12 @@ public class SmartTravelDriver {
                 case 9:  saveAllData(service);            break;
                 case 10: runPredefinedScenario(service);  break;
                 case 11: generateDashboard(service);      break;
-                case 12:
+                case 0:
                     System.out.println("Goodbye! Thank you for using SmartTravel.");
                     running = false;
                     break;
                 default:
-                    System.out.println("Invalid choice. Please enter 1-12.");
+                    System.out.println("Invalid choice. Please enter 0-11.");
             }
         }
         scanner.close();
@@ -81,7 +81,7 @@ public class SmartTravelDriver {
         System.out.println("9.  Save All Data (output/data/*.csv)");
         System.out.println("10. Run Predefined Scenario");
         System.out.println("11. Generate Dashboard (HTML + charts)");
-        System.out.println("12. Exit");
+        System.out.println("0.  Exit");
         System.out.print("Enter your choice: ");
     }
 
@@ -606,7 +606,7 @@ public class SmartTravelDriver {
             for (int i = 0; i < service.getTransportCount(); i++) {
                 Transportation t = service.getTransportation(i);
                 String type = (t instanceof Flight) ? "Flight" :
-                              (t instanceof Train)  ? "Train"  : "Bus";
+                        (t instanceof Train)  ? "Train"  : "Bus";
                 System.out.printf("  %-8s [%-6s] %-15s -> %-15s%n",
                         t.getTransportId(), type, t.getDepartureCity(), t.getArrivalCity());
             }
