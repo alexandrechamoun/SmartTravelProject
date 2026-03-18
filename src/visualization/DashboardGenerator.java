@@ -14,7 +14,7 @@ package visualization;
  *
  * Output: output/dashboard/dashboard.html + 3 chart PNGs
  *
- * @author [Your Name] & Kaustubha Mendhurwar
+ * @author Kaustubha Mendhurwar
  * @version Winter 2026 - A2
  */
 
@@ -46,9 +46,9 @@ public class DashboardGenerator {
         new File("output/logs").mkdirs();
 
         // 1. Generate charts FIRST
-        TripChartGenerator.generateCostBarChart(service);
-        TripChartGenerator.generateDestinationPieChart(service);
-        TripChartGenerator.generateDurationLineChart(service);
+        TripChartGenerator.generateCostBarChart(service.getAllTrips(), service.getTripCount());
+        TripChartGenerator.generateDestinationPieChart(service.getAllTrips(), service.getTripCount());
+        TripChartGenerator.generateDurationLineChart(service.getAllTrips(), service.getTripCount());
 
         // 2. Generate HTML dashboard
         generateHTMLDashboard(service);
