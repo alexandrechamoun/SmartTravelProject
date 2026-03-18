@@ -32,7 +32,7 @@ public class SmartTravelDriver {
 
         System.out.println("==========================================");
         System.out.println("  Welcome to SmartTravel Agency - A2");
-        System.out.println("  Made by [Your Name] & Alexandre Chamoun");
+        System.out.println("  Made by Adam Kozman & Alexandre Chamoun");
         System.out.println("==========================================");
 
         boolean running = true;
@@ -532,15 +532,15 @@ public class SmartTravelDriver {
         try {
             switch (choice) {
                 case "a":
-                    TripChartGenerator.generateCostBarChart(service);
+                    TripChartGenerator.generateCostBarChart(service.getAllTrips(), service.getTripCount());
                     System.out.println("Bar chart saved to output/charts/trip_cost_bar_chart.png");
                     break;
                 case "b":
-                    TripChartGenerator.generateDestinationPieChart(service);
+                    TripChartGenerator.generateDestinationPieChart(service.getAllTrips(), service.getTripCount());
                     System.out.println("Pie chart saved to output/charts/trips_per_destination_pie.png");
                     break;
                 case "c":
-                    TripChartGenerator.generateDurationLineChart(service);
+                    TripChartGenerator.generateDurationLineChart(service.getAllTrips(), service.getTripCount());
                     System.out.println("Line chart saved to output/charts/trip_duration_line_chart.png");
                     break;
                 default:
