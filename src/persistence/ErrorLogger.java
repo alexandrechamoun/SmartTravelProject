@@ -1,7 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
 // Written by: Adam Kozman - 40341342
-//              Alexander Chamoun - 40341371
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Logs all CSV load errors to output/logs/errors.txt.
 // Uses append mode so errors from different load sessions accumulate.

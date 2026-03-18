@@ -1,7 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
 // Written by: Adam Kozman - 40341342
-//              Alexander Chamoun - 40341371
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Central service class for the SmartTravel application.
 // Maintains 4 in-memory arrays (clients, trips, accommodations, transportations)

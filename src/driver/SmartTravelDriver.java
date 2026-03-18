@@ -1,7 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
 // Written by: Adam Kozman - 40341342
-//              Alexander Chamoun - 40341371
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Main driver class for the SmartTravel A2 application.
 // Keeps A1 menus 1-6 exactly as-is (from partner's code) and adds:

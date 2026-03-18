@@ -1,7 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
 // Written by: Adam Kozman - 40341342
-//              Alexander Chamoun - 40341371
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Handles saving and loading Trip objects to/from CSV.
 // CSV format (semicolon-separated, NO header):
