@@ -116,6 +116,7 @@ public class Trip {
 
 	// ============ SETTERS ===========
 	public void setDestination(String destination) { this.destination = destination; }
+	public void setTripId(String tripId) { this.tripId = tripId; }
 
 	public void setDurationInDays(int numOfDays) throws InvalidTripDataException {
 		validateDuration(numOfDays);
