@@ -1,0 +1,4 @@
+FLIGHT;TR3001;Alitalia;JFK;FCO;850.0;23.0
+TRAIN;TR3002;Shinkansen;Tokyo;Kyoto;250.0;HighSpeed;Economy
+BUS;TR3003;Greyhound;NYC;Boston;75.0;3
+FLIGHT;TR3007;ScenarioAir;Montreal;Rome;600.0;25.0
