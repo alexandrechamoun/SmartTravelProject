@@ -3,7 +3,7 @@
 // Written by: Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Represents a trip managed by SmartTravel.
-// A2 additions: basePrice >= $100, duration 1-20 days,
+// A2 additions: basePrice >= $100, duration 1-60 days,
 // client must be non-null (InvalidTripDataException).
 // Deep copy constructor updated for new exception signatures.
 
@@ -30,7 +30,7 @@ public class Trip {
 	// Business rule constants
 	private static final double MIN_BASE_PRICE  = 100.00;
 	private static final int    MIN_DAYS        = 1;
-	private static final int    MAX_DAYS        = 20;
+	private static final int    MAX_DAYS        = 60;
 
 
 	// ================= VALIDATION HELPERS =================
