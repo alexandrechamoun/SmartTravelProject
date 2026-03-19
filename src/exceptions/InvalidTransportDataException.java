@@ -1,6 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
-// Written by: Alexandre Chamoun - 40341371
+// Written by: Adam Kozman - 40341342
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Checked exception thrown when a Transportation subclass
 // attribute violates business rules (negative luggage allowance,

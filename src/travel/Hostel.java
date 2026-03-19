@@ -1,6 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
-// Written by: Alexandre Chamoun - 40341371
+// Written by: Adam Kozman - 40341342
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Represents a hostel accommodation option.
 // Cost = pricePerNight x numberOfDays x 0.85 (15% discount).

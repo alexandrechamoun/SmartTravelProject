@@ -1,6 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
-// Written by: Alexandre Chamoun - 40341371
+// Written by: Adam Kozman - 40341342
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Represents a hotel accommodation option.
 // Cost = pricePerNight x numberOfDays x 1.10 (10% service fee).

@@ -1,6 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
-// Written by: Alexandre Chamoun - 40341371
+// Written by: Adam Kozman - 40341342
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Abstract class representing a transportation option.
 // Cannot be instantiated directly — use Flight, Train, or Bus.

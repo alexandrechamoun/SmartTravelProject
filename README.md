@@ -3,7 +3,7 @@ SmartTravel A2 — Data Management System
 Course: COMP 249 — Object-Oriented Programming II, Winter 2026
 Assignment: 2
 
-Authors: Alexandre Chamoun (40341371) & Adam Kozman (STUDENT ID)
+Authors: Alexandre Chamoun (40341371) & Adam Kozman (40341342)
 
 Project Overview:
 SmartTravel is a console-based travel agency management system. This assignment extends A1 by adding:

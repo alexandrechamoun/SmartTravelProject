@@ -1,6 +1,7 @@
 // -------------------------------------------------------------
 // Assignment 2
-// Written by: Alexandre Chamoun - 40341371
+// Written by: Adam Kozman - 40341342
+//             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Abstract class representing an accommodation option.
 // A2 additions: pricePerNight must be > $0 (InvalidAccommodationDataException).
