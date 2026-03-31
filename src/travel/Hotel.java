@@ -1,11 +1,14 @@
 // -------------------------------------------------------------
-// Assignment 2
+// Assignment 3
 // Written by: Adam Kozman - 40341342
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Represents a hotel accommodation option.
 // Cost = pricePerNight x numberOfDays x 1.10 (10% service fee).
-// A2 additions: star rating must be 1-5 (InvalidAccommodationDataException).
+// A2: star rating must be 1-5.
+// A3 changes:
+//   - toCsvRow() implemented (required by CsvPersistable via Accommodation)
+//   - static fromCsvRow() factory method added
 
 package travel;
 
@@ -13,16 +16,16 @@ import exceptions.InvalidAccommodationDataException;
 
 public class Hotel extends Accommodation {
 
-	// ======== ATTRIBUTES =========
+	// ================= ATTRIBUTES =================
+	// Unchanged from A2
 	private int starRating;
 
 
-	// ======== CONSTRUCTORS ============
+	// ================= CONSTRUCTORS =================
+	// Unchanged from A2
 
-	// Default Constructor
 	public Hotel() {}
 
-	// Parameterized Constructor
 	public Hotel(String name, String location, double pricePerNight, int starRating)
 			throws InvalidAccommodationDataException {
 		super(name, location, pricePerNight);
@@ -30,7 +33,6 @@ public class Hotel extends Accommodation {
 		this.starRating = starRating;
 	}
 
-	// Copy Constructor
 	public Hotel(Hotel otherHotel) {
 		super(otherHotel);
 		this.starRating = otherHotel.starRating;
@@ -38,6 +40,7 @@ public class Hotel extends Accommodation {
 
 
 	// ================= VALIDATION =================
+	// Unchanged from A2
 	private static void validateStars(int stars) throws InvalidAccommodationDataException {
 		if (stars < 1 || stars > 5)
 			throw new InvalidAccommodationDataException(
@@ -45,25 +48,58 @@ public class Hotel extends Accommodation {
 	}
 
 
-	// ======== GETTERS =========
+	// ================= GETTERS =================
+	// Unchanged from A2
 	public int getStarRating() { return starRating; }
 
 
-	// ========= SETTERS =========
+	// ================= SETTERS =================
+	// Unchanged from A2
 	public void setStarRating(int starRating) throws InvalidAccommodationDataException {
 		validateStars(starRating);
 		this.starRating = starRating;
 	}
 
 
-	// ========== CALCULATE COST METHOD ==========
+	// ================= CALCULATE COST =================
+	// Unchanged from A2
 	@Override
 	public double calculateCost(int numberOfDays) {
 		return getPricePerNight() * numberOfDays * 1.10;
 	}
 
 
-	// ========== TO STRING METHOD ============
+	// ================= A3: CsvPersistable =================
+
+	// A3: new — implements abstract toCsvRow() from Accommodation
+	// Format matches A2 AccommodationFileManager output:
+	// HOTEL;AccommodationID;name;location;pricePerNight;starRating
+	@Override
+	public String toCsvRow() {
+		return "HOTEL;" + getAccommodationId() + ";" + getName() + ";"
+				+ getLocation() + ";" + getPricePerNight() + ";" + starRating;
+	}
+
+	// A3: new — reconstructs a Hotel from one CSV line
+	// Called by Accommodation.fromCsvRow() when the type prefix is "HOTEL"
+	public static Hotel fromCsvRow(String csvLine) throws InvalidAccommodationDataException {
+		String[] parts = csvLine.split(";");
+		if (parts.length < 6)
+			throw new InvalidAccommodationDataException("Invalid HOTEL CSV row: " + csvLine);
+		String id    = parts[1].trim();
+		String name  = parts[2].trim();
+		String loc   = parts[3].trim();
+		double price = Double.parseDouble(parts[4].trim());
+		int    stars = Integer.parseInt(parts[5].trim());
+		Hotel h = new Hotel(name, loc, price, stars);
+		h.setAccommodationId(id); // restore original ID from file
+		return h;
+	}
+
+
+	// ================= TO STRING / EQUALS =================
+	// Unchanged from A2
+
 	@Override
 	public String toString() {
 		return super.toString()
@@ -71,8 +107,6 @@ public class Hotel extends Accommodation {
 				+ "\nRating (Stars): " + starRating;
 	}
 
-
-	// ================= EQUALS METHOD ==============
 	@Override
 	public boolean equals(Object obj) {
 		if (!super.equals(obj)) return false;

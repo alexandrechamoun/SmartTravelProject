@@ -1,35 +1,39 @@
 // -------------------------------------------------------------
-// Assignment 2
+// Assignment 3
 // Written by: Adam Kozman - 40341342
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Represents a client of the SmartTravel agency.
-// Each client is automatically assigned a unique ID starting at C1001.
-// A2 additions: input validation on all fields (InvalidClientDataException),
-// amountSpent attribute to track total spending across all trips.
+// A2: input validation on all fields, amountSpent tracking.
+// A3 changes:
+//   - implements Identifiable:    getId() added
+//   - implements CsvPersistable:  toCsvRow() and static fromCsvRow() added
+//   - implements Comparable<Client>: compareTo() added (descending by amountSpent)
 
 package client;
 
 import exceptions.InvalidClientDataException;
+import interfaces.Identifiable;      // A3: new import
+import interfaces.CsvPersistable;   // A3: new import
 
-public class Client {
+// A3: added "implements Identifiable, CsvPersistable, Comparable<Client>"
+// A2: public class Client {
+public class Client implements Identifiable, CsvPersistable, Comparable<Client> {
 
 	// ================= ATTRIBUTES =================
+	// Unchanged from A2
 	private String clientId;
 	private String firstName;
 	private String lastName;
 	private String email;
-	private double amountSpent; // A2: tracks total spending across all trips
+	private double amountSpent;
 
-	// Id counter shared by all Client objects.
 	private static int nextId = 1001;
 
 
 	// ================= VALIDATION HELPERS =================
+	// Unchanged from A2
 
-	/**
-	 * Validates a first or last name: non-empty and <= 50 chars.
-	 */
 	private static void validateName(String name, String fieldName) throws InvalidClientDataException {
 		if (name == null || name.trim().isEmpty())
 			throw new InvalidClientDataException(fieldName + " cannot be empty.");
@@ -37,9 +41,6 @@ public class Client {
 			throw new InvalidClientDataException(fieldName + " cannot exceed 50 characters (got " + name.length() + ").");
 	}
 
-	/**
-	 * Validates an email: contains '@' and '.', no spaces, <= 100 chars.
-	 */
 	private static void validateEmail(String email) throws InvalidClientDataException {
 		if (email == null || email.trim().isEmpty())
 			throw new InvalidClientDataException("Email cannot be empty.");
@@ -55,45 +56,49 @@ public class Client {
 
 
 	// ================= CONSTRUCTORS =================
+	// Unchanged from A2
 
-	// Default Constructor
 	public Client() {
-		this.clientId = "C" + nextId++;
+		this.clientId    = "C" + nextId++;
 		this.amountSpent = 0.0;
 	}
 
-	// Parameterized Constructor
 	public Client(String firstName, String lastName, String email) throws InvalidClientDataException {
 		validateName(firstName, "First name");
-		validateName(lastName, "Last name");
+		validateName(lastName,  "Last name");
 		validateEmail(email);
-
-		this.firstName = firstName;
-		this.lastName = lastName;
-		this.email = email;
-		this.clientId = "C" + nextId++;
+		this.firstName   = firstName;
+		this.lastName    = lastName;
+		this.email       = email;
+		this.clientId    = "C" + nextId++;
 		this.amountSpent = 0.0;
 	}
 
-	// Copy Constructor
 	public Client(Client otherClient) {
-		this.firstName = otherClient.firstName;
-		this.lastName = otherClient.lastName;
-		this.email = otherClient.email;
-		this.clientId = "C" + nextId++;
+		this.firstName   = otherClient.firstName;
+		this.lastName    = otherClient.lastName;
+		this.email       = otherClient.email;
+		this.clientId    = "C" + nextId++;
 		this.amountSpent = otherClient.amountSpent;
 	}
 
 
 	// ================= GETTERS =================
-	public String getClientId()  { return clientId; }
-	public String getFirstName() { return firstName; }
-	public String getLastName()  { return lastName; }
-	public String getEmail()     { return email; }
+	// Unchanged from A2
+	public String getClientId()    { return clientId; }
+	public String getFirstName()   { return firstName; }
+	public String getLastName()    { return lastName; }
+	public String getEmail()       { return email; }
 	public double getAmountSpent() { return amountSpent; }
+
+	// A3: new — satisfies the Identifiable interface
+	// Repository and GenericFileManager use getId() to look up any entity by ID
+	@Override
+	public String getId() { return clientId; }
 
 
 	// ================= SETTERS =================
+	// Unchanged from A2
 	public void setClientId(String clientId) { this.clientId = clientId; }
 
 	public void setFirstName(String firstName) throws InvalidClientDataException {
@@ -111,10 +116,6 @@ public class Client {
 		this.email = email;
 	}
 
-	/**
-	 * Adds the given amount to this client's total spending.
-	 * Called by SmartTravelService whenever a trip is created for this client.
-	 */
 	public void addAmountSpent(double amount) {
 		if (amount > 0) this.amountSpent += amount;
 	}
@@ -124,17 +125,55 @@ public class Client {
 	}
 
 
-	// ================= TO STRING METHOD ==============
+	// ================= A3: CsvPersistable =================
+
+	// A3: new — satisfies the CsvPersistable interface
+	// Produces the same semicolon format the A2 ClientFileManager wrote:
+	// ClientID;firstName;lastName;email
 	@Override
-	public String toString() {
-		return "Client ID: " + clientId
-				+ "\nFull Name: " + firstName + " " + lastName
-				+ "\nEmail: " + email
-				+ "\nTotal Spent: $" + String.format("%.2f", amountSpent);
+	public String toCsvRow() {
+		return clientId + ";" + firstName + ";" + lastName + ";" + email;
+	}
+
+	// A3: new — static factory that reconstructs a Client from one CSV line
+	// Mirror of toCsvRow(): splits on ";" and validates each field
+	// Used by GenericFileManager.load() in Part 4
+	public static Client fromCsvRow(String csvLine) throws InvalidClientDataException {
+		String[] parts = csvLine.split(";");
+		if (parts.length != 4)
+			throw new InvalidClientDataException("Invalid client CSV row: " + csvLine);
+		String id        = parts[0].trim();
+		String firstName = parts[1].trim();
+		String lastName  = parts[2].trim();
+		String email     = parts[3].trim();
+		Client c = new Client(firstName, lastName, email);
+		c.setClientId(id); // restore original ID from file, overriding auto-generated one
+		return c;
 	}
 
 
-	// ================= EQUALS METHOD ==============
+	// ================= A3: Comparable<Client> =================
+
+	// A3: new — defines natural ordering for Client
+	// Business rule: most valuable clients (highest amountSpent) come first
+	// Reversed comparison (other vs this) makes Collections.sort() produce descending order
+	@Override
+	public int compareTo(Client other) {
+		return Double.compare(other.amountSpent, this.amountSpent);
+	}
+
+
+	// ================= TO STRING / EQUALS =================
+	// Unchanged from A2
+
+	@Override
+	public String toString() {
+		return "Client ID: "      + clientId
+				+ "\nFull Name: "    + firstName + " " + lastName
+				+ "\nEmail: "        + email
+				+ "\nTotal Spent: $" + String.format("%.2f", amountSpent);
+	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null) return false;
