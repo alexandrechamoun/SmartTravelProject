@@ -4,28 +4,12 @@
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Part 4: Generic File Manager
-// Replaces the four separate A2 file managers (ClientFileManager,
-// TripFileManager, AccommodationFileManager, TransportFileManager)
-// with a single generic class that handles any CsvPersistable type.
-//
-// The key idea: instead of hard-coding which class to instantiate,
-// we pass the Class<T> object and use getSimpleName() to dispatch
-// to the right fromCsvRow() static factory.
-//
-// A2 usage (4 separate managers):
-//   ClientFileManager.saveClients(...)
-//   TripFileManager.loadTrips(...)
-//   ...
-//
-// A3 usage (one generic manager):
-//   GenericFileManager.save(clients, "clients.csv");
-//   List<Client> clients = GenericFileManager.load("clients.csv", Client.class);
-//
-// Backward compatibility: the A2 file managers are kept and still used
-// by SmartTravelService.loadAllData/saveAllData so that all existing
-// menus (1-6, 8-11) continue working without modification.
-// GenericFileManager is layered on top and used by the new A3 analytics
-// and any future code that prefers the generic API.
+// One class that replaces all four A2 file managers.
+// Uses toCsvRow() to save and getSimpleName() to figure out
+// which fromCsvRow() to call when loading.
+// Trip loading is still handled by TripFileManager because trips
+// need client/accommodation/transportation to already be loaded first.
+// The old A2 file managers are kept so menus 1-6 and 8-11 still work.
 
 package persistence;
 
@@ -43,24 +27,11 @@ public class GenericFileManager {
 
     // ================= SAVE =================
 
-    /**
-     * Saves any list of CsvPersistable items to the given file path.
-     * Each item serializes itself via toCsvRow() — no type-specific
-     * logic needed here, which is the whole point of the interface.
-     *
-     * Equivalent to what ClientFileManager.saveClients() did, but works
-     * for Client, Trip, Accommodation, and Transportation equally.
-     *
-     * @param items    the list of items to persist
-     * @param filePath the destination CSV file path
-     * @param <T>      any type that implements CsvPersistable
-     * @throws IOException if the file cannot be written
-     */
+    // saves any list of CsvPersistable objects to a file
+    // just calls toCsvRow() on each item — no type-specific code needed
     public static <T extends CsvPersistable> void save(List<T> items, String filePath)
             throws IOException {
-        // Make sure the output directory exists before trying to write
         new File(filePath).getParentFile().mkdirs();
-
         try (PrintWriter writer = new PrintWriter(new FileWriter(filePath))) {
             for (T item : items) {
                 writer.println(item.toCsvRow());
@@ -71,21 +42,9 @@ public class GenericFileManager {
 
     // ================= LOAD =================
 
-    /**
-     * Loads items from a CSV file and reconstructs them using the
-     * appropriate fromCsvRow() static factory, chosen by checking
-     * clazz.getSimpleName() (e.g. "Client", "Accommodation", etc.).
-     *
-     * Trip is intentionally excluded: loading a Trip requires already-
-     * resolved Client, Accommodation, and Transportation references,
-     * which a generic single-pass reader cannot handle. TripFileManager
-     * continues to own trip loading as in A2.
-     *
-     * @param filePath the source CSV file
-     * @param clazz    the Class object for T, used to dispatch fromCsvRow
-     * @param <T>      any CsvPersistable type (except Trip — see above)
-     * @return a List<T> of successfully parsed items; invalid rows are skipped
-     */
+    // loads a CSV file and rebuilds objects using the right fromCsvRow()
+    // we check the class name to know which factory method to call
+    // bad lines are skipped and logged instead of crashing
     public static <T extends CsvPersistable> List<T> load(String filePath, Class<T> clazz) {
         List<T> result = new ArrayList<>();
         int lineNumber = 0;
@@ -98,13 +57,9 @@ public class GenericFileManager {
                 if (line.isEmpty()) continue;
 
                 try {
-                    // Dispatch to the correct fromCsvRow() based on the class name.
-                    // We use a switch on getSimpleName() rather than if/else instanceof
-                    // checks — cleaner and still easy to extend for new types.
                     T item = fromCsvRow(line, clazz);
                     if (item != null) result.add(item);
                 } catch (Exception e) {
-                    // Skip bad lines; log them so the developer can investigate
                     ErrorLogger.log(filePath + " line " + lineNumber
                             + ": " + e.getMessage() + " -> [" + line + "]");
                 }
@@ -122,36 +77,25 @@ public class GenericFileManager {
 
     // ================= PRIVATE DISPATCH =================
 
-    /**
-     * Routes a single CSV line to the right fromCsvRow() static factory.
-     * Uses getSimpleName() so we get "Client", "Accommodation", or
-     * "Transportation" — then calls the appropriate factory.
-     *
-     * @param csvLine the raw CSV line to parse
-     * @param clazz   the Class<T> to determine which factory to call
-     * @return the reconstructed object, or null if the type is unsupported
-     * @throws Exception if fromCsvRow() throws a validation exception
-     */
+    // picks the right fromCsvRow() based on the class name
+    // Client, Accommodation, and Transportation are supported
+    // Trip is not — TripFileManager handles that
     @SuppressWarnings("unchecked")
     private static <T extends CsvPersistable> T fromCsvRow(String csvLine, Class<T> clazz)
             throws Exception {
         switch (clazz.getSimpleName()) {
             case "Client":
-                // Client.fromCsvRow() validates all fields and restores the original ID
                 return (T) Client.fromCsvRow(csvLine);
 
             case "Accommodation":
-                // Accommodation.fromCsvRow() reads the type prefix (HOTEL/HOSTEL)
-                // and delegates to Hotel.fromCsvRow() or Hostel.fromCsvRow()
+                // Accommodation.fromCsvRow() checks the type prefix (HOTEL or HOSTEL)
                 return (T) Accommodation.fromCsvRow(csvLine);
 
             case "Transportation":
-                // Transportation.fromCsvRow() reads the type prefix (FLIGHT/TRAIN/BUS)
-                // and delegates to the appropriate subclass
+                // Transportation.fromCsvRow() checks the type prefix (FLIGHT, TRAIN, BUS)
                 return (T) Transportation.fromCsvRow(csvLine);
 
             default:
-                // Trip is intentionally not handled here — see class-level comment
                 ErrorLogger.log("GenericFileManager: unsupported type '"
                         + clazz.getSimpleName() + "' — use the specific FileManager.");
                 return null;
