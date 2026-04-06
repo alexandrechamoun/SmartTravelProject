@@ -1,24 +1,24 @@
 // -------------------------------------------------------------
-// Assignment 2
+// Assignment 3
 // Written by: Adam Kozman - 40341342
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
-// Main driver class for the SmartTravel A2 application.
-// Keeps A1 menus 1-6 exactly as-is (from partner's code) and adds:
-//   Menu 7:  List All Data Summary
-//   Menu 8:  Load All Data from Files
-//   Menu 9:  Save All Data to Files
-//   Menu 10: Run Predefined Scenario
-//   Menu 11: Generate Dashboard
-//   Menu 0:  Exit
+// Main driver class for the SmartTravel A3 application.
+// A2 menus 1-6 and 8-11 are kept exactly as-is.
+// A3 change: Menu 7 (previously "List All Data Summary") is replaced
+// with the new Advanced Analytics section (7.1 - 7.6) that demos
+// Repository<T>, Predicate<T> filtering, RecentList<T>, and natural sorting.
 
 package driver;
 
+import java.util.List;
 import java.util.Scanner;
 
 import client.Client;
 import travel.*;
 import exceptions.*;
+import service.Repository;
+import service.RecentList;
 import service.SmartTravelService;
 import visualization.DashboardGenerator;
 import visualization.TripChartGenerator;
@@ -31,7 +31,7 @@ public class SmartTravelDriver {
         Scanner scanner = new Scanner(System.in);
 
         System.out.println("==========================================");
-        System.out.println("  Welcome to SmartTravel Agency - A2");
+        System.out.println("  Welcome to SmartTravel Agency - A3");
         System.out.println("  Made by Adam Kozman & Alexandre Chamoun");
         System.out.println("==========================================");
 
@@ -49,8 +49,10 @@ public class SmartTravelDriver {
                 case 5: menuAdditionalOperations(scanner, service);  break;
                 case 6: menuGenerateVisualization(scanner, service); break;
 
-                // ---- A2 New Menus ----
-                case 7:  listAllDataSummary(service);     break;
+                // ---- A3: Menu 7 replaced with Advanced Analytics ----
+                case 7:  menuAdvancedAnalytics(scanner, service);   break;
+
+                // ---- A2 Menus (unchanged) ----
                 case 8:  loadAllData(service);            break;
                 case 9:  saveAllData(service);            break;
                 case 10: runPredefinedScenario(service);  break;
@@ -69,14 +71,14 @@ public class SmartTravelDriver {
 
     // ===================== PRINT MENU =====================
     private static void printMenu() {
-        System.out.println("\n=== SmartTravel A2 Console ===");
+        System.out.println("\n=== SmartTravel A3 Console ===");
         System.out.println("1.  Client Management");
         System.out.println("2.  Trip Management");
         System.out.println("3.  Transportation Management");
         System.out.println("4.  Accommodation Management");
         System.out.println("5.  Additional Operations");
         System.out.println("6.  Generate Visualization (A1 Charts)");
-        System.out.println("7.  List All Data Summary");
+        System.out.println("7.  Advanced Analytics");       // A3: replaces old "List All Data Summary"
         System.out.println("8.  Load All Data (output/data/*.csv)");
         System.out.println("9.  Save All Data (output/data/*.csv)");
         System.out.println("10. Run Predefined Scenario");
@@ -552,66 +554,190 @@ public class SmartTravelDriver {
     }
 
 
-    // ===================== MENU 7: LIST ALL DATA SUMMARY =====================
-    private static void listAllDataSummary(SmartTravelService service) {
-        System.out.println("\n========================================");
-        System.out.println("         ALL DATA SUMMARY");
-        System.out.println("========================================");
+    // ===================== MENU 7: ADVANCED ANALYTICS (A3) =====================
+    // This replaces the old "List All Data Summary" from A2.
+    // It demonstrates: Repository<T> (Part 3), Predicate<T> filtering,
+    // RecentList<T> (Part 1), and natural business sorting (Comparable<T>).
+    // Repos are built fresh from the current service lists each time menu 7 is entered
+    // so they always reflect whatever data is loaded in memory.
+    private static void menuAdvancedAnalytics(Scanner scanner, SmartTravelService service) {
 
-        System.out.println("\n--- CLIENTS (" + service.getClientCount() + ") ---");
-        if (service.getClientCount() == 0) {
-            System.out.println("  (none)");
-        } else {
-            for (int i = 0; i < service.getClientCount(); i++) {
-                Client c = service.getClient(i);
-                System.out.printf("  %-8s %-20s %-30s  Spent: $%.2f%n",
-                        c.getClientId(),
-                        c.getFirstName() + " " + c.getLastName(),
-                        c.getEmail(),
-                        c.getAmountSpent());
+        // Build repo mirrors from the live service lists
+        Repository<Trip>   tripRepo   = new Repository<>();
+        Repository<Client> clientRepo = new Repository<>();
+
+        for (int i = 0; i < service.getTripCount();   i++) tripRepo.add(service.getTrip(i));
+        for (int i = 0; i < service.getClientCount(); i++) clientRepo.add(service.getClient(i));
+
+        // RecentList tracks whichever trips the user views during this session
+        RecentList<Trip> recentTrips = new RecentList<>();
+
+        boolean inAnalytics = true;
+        while (inAnalytics) {
+            System.out.println("\n--- Advanced Analytics ---");
+            System.out.println("7.1  Trips by Destination (Predicate filter)");
+            System.out.println("7.2  Trips by Cost Range  (Predicate range)");
+            System.out.println("7.3  Top Clients by Spending (natural sort)");
+            System.out.println("7.4  Recent Trips (RecentList demo)");
+            System.out.println("7.5  Smart Sort Collections (business natural order)");
+            System.out.println("7.6  Back to main menu");
+            System.out.print("Enter your choice: ");
+            String choice = scanner.nextLine().trim();
+
+            switch (choice) {
+
+                // ----- 7.1: Trips by Destination -----
+                // Uses a Predicate<Trip> to filter by destination name — shows how
+                // a simple lambda replaces a whole for-loop search
+                case "7.1": {
+                    if (service.getTripCount() == 0) { System.out.println("No trips loaded."); break; }
+                    System.out.print("Enter destination to search: ");
+                    String dest = scanner.nextLine().trim();
+                    List<Trip> matches = tripRepo.filter(
+                            t -> t.getDestination().equalsIgnoreCase(dest));
+                    System.out.println("\nTrips to \"" + dest + "\": " + matches.size() + " found.");
+                    for (Trip t : matches) {
+                        System.out.println("  " + t.getTripId()
+                                + " | " + t.getDurationInDays() + " days"
+                                + " | $" + String.format("%.2f", t.calculateTotalCost()));
+                        recentTrips.addRecent(t); // record as recently viewed
+                    }
+                    break;
+                }
+
+                // ----- 7.2: Trips by Cost Range -----
+                // Predicate<Trip> with two bounds — shows that predicates can capture
+                // local variables (min/max) from the enclosing scope
+                case "7.2": {
+                    if (service.getTripCount() == 0) { System.out.println("No trips loaded."); break; }
+                    System.out.print("Minimum cost: $");
+                    double min = readDouble(scanner);
+                    System.out.print("Maximum cost: $");
+                    double max = readDouble(scanner);
+                    List<Trip> inRange = tripRepo.filter(
+                            t -> t.calculateTotalCost() >= min && t.calculateTotalCost() <= max);
+                    System.out.println("\nTrips between $" + String.format("%.2f", min)
+                            + " and $" + String.format("%.2f", max)
+                            + ": " + inRange.size() + " found.");
+                    for (Trip t : inRange) {
+                        System.out.println("  " + t.getTripId()
+                                + " | " + t.getDestination()
+                                + " | $" + String.format("%.2f", t.calculateTotalCost()));
+                        recentTrips.addRecent(t);
+                    }
+                    break;
+                }
+
+                // ----- 7.3: Top Clients by Spending -----
+                // clientRepo.getSorted() uses Client.compareTo() (descending amountSpent)
+                // via Collections.sort() — no manual comparator needed
+                case "7.3": {
+                    if (service.getClientCount() == 0) { System.out.println("No clients loaded."); break; }
+                    System.out.print("How many top clients to show? ");
+                    int n = readInt(scanner);
+                    List<Client> sorted = clientRepo.getSorted();
+                    int limit = Math.min(n, sorted.size());
+                    System.out.println("\nTop " + limit + " clients by total spending:");
+                    for (int i = 0; i < limit; i++) {
+                        Client c = sorted.get(i);
+                        System.out.printf("  #%-2d %-8s %-25s $%.2f%n",
+                                i + 1,
+                                c.getClientId(),
+                                c.getFirstName() + " " + c.getLastName(),
+                                c.getAmountSpent());
+                    }
+                    break;
+                }
+
+                // ----- 7.4: Recent Trips -----
+                // Demonstrates RecentList<T>: shows whatever trips were viewed
+                // in 7.1 or 7.2 during this analytics session, most recent first.
+                // The list auto-caps at 10 and never needs a size variable.
+                case "7.4": {
+                    System.out.println("\nRecently viewed trips (most recent first):");
+                    if (recentTrips.isEmpty()) {
+                        System.out.println("  (none yet — use 7.1 or 7.2 to view some trips first)");
+                    } else {
+                        recentTrips.printRecent(5); // show up to 5
+                    }
+                    break;
+                }
+
+                // ----- 7.5: Smart Sort Collections -----
+                // Calls getSorted() on both repos and also sorts accommodations
+                // and transportations — demonstrates all four natural orderings
+                case "7.5": {
+                    System.out.println("\n=== Business Natural Order Sort ===");
+
+                    // Trips — descending by total cost (highest revenue first)
+                    System.out.println("\n--- Trips (descending by total cost) ---");
+                    if (service.getTripCount() == 0) {
+                        System.out.println("  (none)");
+                    } else {
+                        List<Trip> sortedTrips = tripRepo.getSorted();
+                        for (Trip t : sortedTrips) {
+                            System.out.printf("  %-8s %-15s $%.2f%n",
+                                    t.getTripId(), t.getDestination(), t.calculateTotalCost());
+                        }
+                    }
+
+                    // Clients — descending by amountSpent (most valuable first)
+                    System.out.println("\n--- Clients (descending by total spent) ---");
+                    if (service.getClientCount() == 0) {
+                        System.out.println("  (none)");
+                    } else {
+                        List<Client> sortedClients = clientRepo.getSorted();
+                        for (Client c : sortedClients) {
+                            System.out.printf("  %-8s %-25s $%.2f%n",
+                                    c.getClientId(),
+                                    c.getFirstName() + " " + c.getLastName(),
+                                    c.getAmountSpent());
+                        }
+                    }
+
+                    // Accommodations — descending by pricePerNight (luxury first)
+                    System.out.println("\n--- Accommodations (descending by price/night) ---");
+                    if (service.getAccommodationCount() == 0) {
+                        System.out.println("  (none)");
+                    } else {
+                        Repository<Accommodation> accRepo = new Repository<>();
+                        for (int i = 0; i < service.getAccommodationCount(); i++)
+                            accRepo.add(service.getAccommodation(i));
+                        List<Accommodation> sortedAcc = accRepo.getSorted();
+                        for (Accommodation a : sortedAcc) {
+                            System.out.printf("  %-8s %-25s $%.2f/night%n",
+                                    a.getAccommodationId(), a.getName(), a.getPricePerNight());
+                        }
+                    }
+
+                    // Transportations — descending by base fare (premium first)
+                    System.out.println("\n--- Transportations (descending by base fare) ---");
+                    if (service.getTransportCount() == 0) {
+                        System.out.println("  (none)");
+                    } else {
+                        Repository<Transportation> transRepo = new Repository<>();
+                        for (int i = 0; i < service.getTransportCount(); i++)
+                            transRepo.add(service.getTransportation(i));
+                        List<Transportation> sortedTrans = transRepo.getSorted();
+                        for (Transportation t : sortedTrans) {
+                            System.out.printf("  %-8s [%-6s] %s -> %s  $%.2f%n",
+                                    t.getTransportId(),
+                                    t instanceof Flight ? "Flight" : t instanceof Train ? "Train" : "Bus",
+                                    t.getDepartureCity(), t.getArrivalCity(),
+                                    t.getBaseFare());
+                        }
+                    }
+                    break;
+                }
+
+                case "7.6":
+                    inAnalytics = false;
+                    break;
+
+                default:
+                    System.out.println("Invalid choice. Enter 7.1 through 7.6.");
             }
         }
-
-        System.out.println("\n--- TRIPS (" + service.getTripCount() + ") ---");
-        if (service.getTripCount() == 0) {
-            System.out.println("  (none)");
-        } else {
-            for (int i = 0; i < service.getTripCount(); i++) {
-                Trip t = service.getTrip(i);
-                System.out.printf("  %-8s %-8s %-15s %-5d days  $%.2f%n",
-                        t.getTripId(),
-                        t.getClient() != null ? t.getClient().getClientId() : "N/A",
-                        t.getDestination(),
-                        t.getDurationInDays(),
-                        t.calculateTotalCost());
-            }
-        }
-
-        System.out.println("\n--- ACCOMMODATIONS (" + service.getAccommodationCount() + ") ---");
-        if (service.getAccommodationCount() == 0) {
-            System.out.println("  (none)");
-        } else {
-            for (int i = 0; i < service.getAccommodationCount(); i++) {
-                Accommodation a = service.getAccommodation(i);
-                String type = (a instanceof Hotel) ? "Hotel" : "Hostel";
-                System.out.printf("  %-8s [%-6s] %-25s %-15s $%.2f/night%n",
-                        a.getAccommodationId(), type, a.getName(), a.getLocation(), a.getPricePerNight());
-            }
-        }
-
-        System.out.println("\n--- TRANSPORTATIONS (" + service.getTransportCount() + ") ---");
-        if (service.getTransportCount() == 0) {
-            System.out.println("  (none)");
-        } else {
-            for (int i = 0; i < service.getTransportCount(); i++) {
-                Transportation t = service.getTransportation(i);
-                String type = (t instanceof Flight) ? "Flight" :
-                        (t instanceof Train)  ? "Train"  : "Bus";
-                System.out.printf("  %-8s [%-6s] %-15s -> %-15s%n",
-                        t.getTransportId(), type, t.getDepartureCity(), t.getArrivalCity());
-            }
-        }
-        System.out.println("========================================");
     }
 
 
