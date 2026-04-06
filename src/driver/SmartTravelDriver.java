@@ -3,11 +3,9 @@
 // Written by: Adam Kozman - 40341342
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
-// Main driver class for the SmartTravel A3 application.
-// A2 menus 1-6 and 8-11 are kept exactly as-is.
-// A3 change: Menu 7 (previously "List All Data Summary") is replaced
-// with the new Advanced Analytics section (7.1 - 7.6) that demos
-// Repository<T>, Predicate<T> filtering, RecentList<T>, and natural sorting.
+// Main driver for SmartTravel A3.
+// A2 menus 1-6 and 8-11 are unchanged.
+// A3 change: Menu 7 is now the Advanced Analytics menu (7.1-7.6).
 
 package driver;
 
@@ -555,11 +553,9 @@ public class SmartTravelDriver {
 
 
     // ===================== MENU 7: ADVANCED ANALYTICS (A3) =====================
-    // This replaces the old "List All Data Summary" from A2.
-    // It demonstrates: Repository<T> (Part 3), Predicate<T> filtering,
-    // RecentList<T> (Part 1), and natural business sorting (Comparable<T>).
-    // Repos are built fresh from the current service lists each time menu 7 is entered
-    // so they always reflect whatever data is loaded in memory.
+    // Menu 7 used to be "List All Data Summary" in A2, now replaced with analytics.
+    // Shows off Repository<T>, Predicate<T> filtering, RecentList<T>, and sorting.
+    // Repos are rebuilt each time from the current service data.
     private static void menuAdvancedAnalytics(Scanner scanner, SmartTravelService service) {
 
         // Build repo mirrors from the live service lists
@@ -587,8 +583,7 @@ public class SmartTravelDriver {
             switch (choice) {
 
                 // ----- 7.1: Trips by Destination -----
-                // Uses a Predicate<Trip> to filter by destination name — shows how
-                // a simple lambda replaces a whole for-loop search
+                // predicate filters trips where destination matches the input
                 case "7.1": {
                     if (service.getTripCount() == 0) { System.out.println("No trips loaded."); break; }
                     System.out.print("Enter destination to search: ");
@@ -606,8 +601,7 @@ public class SmartTravelDriver {
                 }
 
                 // ----- 7.2: Trips by Cost Range -----
-                // Predicate<Trip> with two bounds — shows that predicates can capture
-                // local variables (min/max) from the enclosing scope
+                // predicate filters trips where total cost is between min and max
                 case "7.2": {
                     if (service.getTripCount() == 0) { System.out.println("No trips loaded."); break; }
                     System.out.print("Minimum cost: $");
@@ -629,8 +623,7 @@ public class SmartTravelDriver {
                 }
 
                 // ----- 7.3: Top Clients by Spending -----
-                // clientRepo.getSorted() uses Client.compareTo() (descending amountSpent)
-                // via Collections.sort() — no manual comparator needed
+                // getSorted() uses Client.compareTo() which sorts descending by amountSpent
                 case "7.3": {
                     if (service.getClientCount() == 0) { System.out.println("No clients loaded."); break; }
                     System.out.print("How many top clients to show? ");
@@ -650,9 +643,8 @@ public class SmartTravelDriver {
                 }
 
                 // ----- 7.4: Recent Trips -----
-                // Demonstrates RecentList<T>: shows whatever trips were viewed
-                // in 7.1 or 7.2 during this analytics session, most recent first.
-                // The list auto-caps at 10 and never needs a size variable.
+                // shows trips viewed in 7.1 or 7.2 this session, most recent first
+                // RecentList auto-caps at 10 items, no size variable needed
                 case "7.4": {
                     System.out.println("\nRecently viewed trips (most recent first):");
                     if (recentTrips.isEmpty()) {
@@ -664,8 +656,7 @@ public class SmartTravelDriver {
                 }
 
                 // ----- 7.5: Smart Sort Collections -----
-                // Calls getSorted() on both repos and also sorts accommodations
-                // and transportations — demonstrates all four natural orderings
+                // sorts all four entity types using their natural business order
                 case "7.5": {
                     System.out.println("\n=== Business Natural Order Sort ===");
 
