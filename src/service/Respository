@@ -3,22 +3,10 @@
 // Written by: Adam Kozman - 40341342
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
-// Part 3: Generic Repository Pattern
-// A generic query layer that sits on top of the raw List<T> storage
-// managed by SmartTravelService. While the service owns the master
-// lists (add/remove), the Repository mirrors those lists and provides
-// richer query capabilities: ID-based lookup, predicate filtering,
-// and business-natural sorted views.
-//
-// Type parameter T must implement both Identifiable (so findById
-// can compare IDs) and Comparable<? super T> (so getSorted can
-// use the natural business ordering each class defines).
-//
-// Usage pattern inside the service:
-//   clientRepo.add(c);           // mirror every add
-//   clientRepo.findById("C1001") // query without looping in driver
-//   clientRepo.filter(t -> t.getTotalCost() > 2000) // predicate search
-//   clientRepo.getSorted()       // business-ordered snapshot
+// Part 3: Generic Repository
+// Works with any type T that has an ID (Identifiable) and a natural
+// sort order (Comparable). Mirrors the main service list and adds
+// findById, filter, and getSorted on top of it.
 
 package service;
 
@@ -32,20 +20,13 @@ import java.util.function.Predicate;
 
 public class Repository<T extends Identifiable & Comparable<? super T>> {
 
-    // The internal mirror list — populated by add() calls that shadow
-    // every corresponding add in SmartTravelService
+    // internal list that mirrors whatever is in the service
     private final List<T> items = new ArrayList<>();
 
 
     // ================= ADD =================
 
-    /**
-     * Adds an item to the repository, mirroring the main service list.
-     * Called alongside every service.addClient/Trip/etc. so the two
-     * lists stay in sync.
-     *
-     * @param item the entity to mirror
-     */
+    // add an item to the repo — called every time we add to the service list
     public void add(T item) {
         items.add(item);
     }
@@ -53,16 +34,8 @@ public class Repository<T extends Identifiable & Comparable<? super T>> {
 
     // ================= FIND BY ID =================
 
-    /**
-     * Looks up a single entity by its unique ID string.
-     * Uses getId() from the Identifiable interface so this one method
-     * works for Client ("C1001"), Trip ("T2001"), Accommodation ("A4001"),
-     * and Transportation ("TR3001") without any casting.
-     *
-     * @param id the ID to search for (case-insensitive)
-     * @return the matching entity
-     * @throws EntityNotFoundException if no entity with that ID exists
-     */
+    // look up any entity by its ID string, works for Client, Trip, etc.
+    // throws EntityNotFoundException if nothing matches
     public T findById(String id) throws EntityNotFoundException {
         for (T item : items) {
             if (item.getId().equalsIgnoreCase(id))
@@ -75,18 +48,8 @@ public class Repository<T extends Identifiable & Comparable<? super T>> {
 
     // ================= FILTER =================
 
-    /**
-     * Returns all items that satisfy the given predicate — any
-     * true/false question you can express as a lambda.
-     *
-     * Examples:
-     *   tripRepo.filter(t -> t.getTotalCost() > 2000)
-     *   tripRepo.filter(t -> t.getDestination().equals("Paris"))
-     *   clientRepo.filter(c -> c.getAmountSpent() > 1000)
-     *
-     * @param predicate a Predicate<T> lambda that returns true to include the item
-     * @return a new list containing only the items that matched
-     */
+    // returns all items that pass the given predicate (true/false lambda)
+    // e.g. tripRepo.filter(t -> t.getTotalCost() > 2000)
     public List<T> filter(Predicate<T> predicate) {
         List<T> result = new ArrayList<>();
         for (T item : items) {
@@ -99,18 +62,9 @@ public class Repository<T extends Identifiable & Comparable<? super T>> {
 
     // ================= GET SORTED =================
 
-    /**
-     * Returns a sorted snapshot of all items using each class's
-     * natural business ordering defined by compareTo():
-     *   Client        -> descending by total amount spent
-     *   Trip          -> descending by total cost
-     *   Accommodation -> descending by price per night
-     *   Transportation-> descending by base fare
-     *
-     * A new list is returned so the internal mirror is never mutated.
-     *
-     * @return a new sorted list of all items
-     */
+    // returns a sorted copy of the list using each class's compareTo()
+    // Client -> descending by amountSpent, Trip -> descending by total cost, etc.
+    // returns a new list so the original is not changed
     public List<T> getSorted() {
         List<T> sorted = new ArrayList<>(items);
         Collections.sort(sorted);
@@ -120,17 +74,12 @@ public class Repository<T extends Identifiable & Comparable<? super T>> {
 
     // ================= UTILITY =================
 
-    /**
-     * Clears the repository — used when SmartTravelService reloads data
-     * from CSV so the repo mirror doesn't accumulate stale entries.
-     */
+    // clears the repo when data is reloaded from CSV
     public void clear() {
         items.clear();
     }
 
-    /**
-     * Returns the number of items currently mirrored in this repository.
-     */
+    // returns how many items are in the repo
     public int size() {
         return items.size();
     }
