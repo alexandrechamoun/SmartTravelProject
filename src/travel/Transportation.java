@@ -35,7 +35,7 @@ abstract public class Transportation
 
 
 	// ================= VALIDATION =================
-	// Unchanged from A2
+
 	protected static void validateNonEmpty(String value, String fieldName)
 			throws InvalidTransportDataException {
 		if (value == null || value.trim().isEmpty())
@@ -44,7 +44,6 @@ abstract public class Transportation
 
 
 	// ================= CONSTRUCTORS =================
-	// Unchanged from A2
 
 	public Transportation() {
 		this.transportId = "TR" + nextId++;
@@ -70,7 +69,7 @@ abstract public class Transportation
 
 
 	// ================= GETTERS =================
-	// Unchanged from A2
+
 	public String getTransportId()   { return transportId; }
 	public String getCompanyName()   { return companyName; }
 	public String getDepartureCity() { return departureCity; }
@@ -82,7 +81,7 @@ abstract public class Transportation
 
 
 	// ================= SETTERS =================
-	// Unchanged from A2
+
 	public void setTransportId(String transportId) { this.transportId = transportId; }
 
 	public void setCompanyName(String companyName) throws InvalidTransportDataException {
@@ -103,7 +102,6 @@ abstract public class Transportation
 
 	// ================= ABSTRACT METHODS =================
 
-	// Unchanged from A2
 	public abstract double calculateCost(int numberOfDays);
 
 	// A3: new abstract — each subclass (Flight/Train/Bus) overrides with its own CSV format
@@ -150,7 +148,6 @@ abstract public class Transportation
 
 
 	// ================= TO STRING / EQUALS =================
-	// Unchanged from A2
 
 	@Override
 	public String toString() {
