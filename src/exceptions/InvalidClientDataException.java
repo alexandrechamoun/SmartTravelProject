@@ -4,7 +4,7 @@
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Checked exception thrown when a Client's attribute values
-// violate business rules (empty names, invalid email format,
+// (empty names, invalid email format,
 // lengths exceeding allowed limits, etc.)
 
 package exceptions;
