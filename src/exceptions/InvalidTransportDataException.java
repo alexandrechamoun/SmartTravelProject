@@ -4,7 +4,7 @@
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Checked exception thrown when a Transportation subclass
-// attribute violates business rules (negative luggage allowance,
+// (negative luggage allowance,
 // bus with fewer than 1 stop, invalid fare values, etc.)
 
 package exceptions;
