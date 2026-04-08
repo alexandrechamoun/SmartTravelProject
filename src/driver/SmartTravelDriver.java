@@ -47,10 +47,10 @@ public class SmartTravelDriver {
                 case 5: menuAdditionalOperations(scanner, service);  break;
                 case 6: menuGenerateVisualization(scanner, service); break;
 
-                // ---- A3: Menu 7 replaced with Advanced Analytics ----
+                // Menu 7 replaced with Advanced Analytics ----
                 case 7:  menuAdvancedAnalytics(scanner, service);   break;
 
-                // ---- A2 Menus (unchanged) ----
+               
                 case 8:  loadAllData(service);            break;
                 case 9:  saveAllData(service);            break;
                 case 10: runPredefinedScenario(service);  break;
