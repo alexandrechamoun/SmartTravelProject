@@ -77,11 +77,11 @@ How to Run:
 Menu options:
   1-6   — Client, Trip, Transport, Accommodation management + charts (A1/A2, unchanged)
   7     — Advanced Analytics (NEW in A3)
-  8     — Load all data from output/data/*.csv
-  9     — Save all data to output/data/*.csv
+  8     — Load all data from data/*.csv
+  9     — Save all data to data/*.csv
   10    — Run predefined scenario (demonstrates all 6 exceptions)
   11    — Generate HTML dashboard + charts
   0     — Exit
 
-CSV data files are located in: output/data/
+CSV data files are located in: data/
 Log file for load errors:       output/logs/errors.txt
