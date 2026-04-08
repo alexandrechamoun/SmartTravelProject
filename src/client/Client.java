@@ -148,7 +148,7 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 	// ================= A3: Comparable<Client> =================
 
 	// defines natural ordering for Client
-	// Business rule: most valuable clients (highest amountSpent) come first
+	// most valuable clients (highest amountSpent) come first
 	// Reversed comparison (other vs this) makes Collections.sort() produce descending order
 	@Override
 	public int compareTo(Client other) {
