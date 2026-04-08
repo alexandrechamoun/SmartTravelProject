@@ -124,7 +124,7 @@ abstract public class Accommodation
 	// ================= A3: Comparable<Accommodation> =================
 
 	// A3: new — defines natural ordering for Accommodation
-	// Business rule: luxury (higher pricePerNight) options come first
+	// luxury (higher pricePerNight) options come first
 	// Reversed comparison (other vs this) makes Collections.sort() produce descending order
 	@Override
 	public int compareTo(Accommodation other) {
