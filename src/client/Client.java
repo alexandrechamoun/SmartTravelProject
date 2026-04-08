@@ -4,7 +4,6 @@
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Represents a client of the SmartTravel agency.
-// A2: input validation on all fields, amountSpent tracking.
 // A3 changes:
 //   - implements Identifiable:    getId() added
 //   - implements CsvPersistable:  toCsvRow() and static fromCsvRow() added
@@ -13,11 +12,10 @@
 package client;
 
 import exceptions.InvalidClientDataException;
-import interfaces.Identifiable;      // A3: new import
-import interfaces.CsvPersistable;   // A3: new import
+import interfaces.Identifiable;    
+import interfaces.CsvPersistable;
 
-// A3: added "implements Identifiable, CsvPersistable, Comparable<Client>"
-// A2: public class Client {
+
 public class Client implements Identifiable, CsvPersistable, Comparable<Client> {
 
 	// ================= ATTRIBUTES =================
@@ -32,7 +30,6 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 
 
 	// ================= VALIDATION HELPERS =================
-	// Unchanged from A2
 
 	private static void validateName(String name, String fieldName) throws InvalidClientDataException {
 		if (name == null || name.trim().isEmpty())
@@ -56,7 +53,6 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 
 
 	// ================= CONSTRUCTORS =================
-	// Unchanged from A2
 
 	public Client() {
 		this.clientId    = "C" + nextId++;
@@ -84,21 +80,18 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 
 
 	// ================= GETTERS =================
-	// Unchanged from A2
 	public String getClientId()    { return clientId; }
 	public String getFirstName()   { return firstName; }
 	public String getLastName()    { return lastName; }
 	public String getEmail()       { return email; }
 	public double getAmountSpent() { return amountSpent; }
 
-	// A3: new — satisfies the Identifiable interface
 	// Repository and GenericFileManager use getId() to look up any entity by ID
 	@Override
 	public String getId() { return clientId; }
 
 
 	// ================= SETTERS =================
-	// Unchanged from A2
 	public void setClientId(String clientId) { this.clientId = clientId; }
 
 	public void setFirstName(String firstName) throws InvalidClientDataException {
@@ -125,9 +118,9 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 	}
 
 
-	// ================= A3: CsvPersistable =================
+	// ================= CsvPersistable =================
 
-	// A3: new — satisfies the CsvPersistable interface
+	// satisfies the CsvPersistable interface
 	// Produces the same semicolon format the A2 ClientFileManager wrote:
 	// ClientID;firstName;lastName;email
 	@Override
@@ -135,7 +128,7 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 		return clientId + ";" + firstName + ";" + lastName + ";" + email;
 	}
 
-	// A3: new — static factory that reconstructs a Client from one CSV line
+	// static factory that reconstructs a Client from one CSV line
 	// Mirror of toCsvRow(): splits on ";" and validates each field
 	// Used by GenericFileManager.load() in Part 4
 	public static Client fromCsvRow(String csvLine) throws InvalidClientDataException {
@@ -154,7 +147,7 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 
 	// ================= A3: Comparable<Client> =================
 
-	// A3: new — defines natural ordering for Client
+	// defines natural ordering for Client
 	// Business rule: most valuable clients (highest amountSpent) come first
 	// Reversed comparison (other vs this) makes Collections.sort() produce descending order
 	@Override
@@ -164,7 +157,6 @@ public class Client implements Identifiable, CsvPersistable, Comparable<Client> 
 
 
 	// ================= TO STRING / EQUALS =================
-	// Unchanged from A2
 
 	@Override
 	public String toString() {
