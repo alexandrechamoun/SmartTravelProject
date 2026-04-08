@@ -4,7 +4,7 @@
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Checked exception thrown when an Accommodation subclass
-// attribute violates business rules (price <= $0, hotel star
+// (price <= $0, hotel star
 // rating not 1-5, hostel price exceeding $150/night, etc.)
 
 package exceptions;
