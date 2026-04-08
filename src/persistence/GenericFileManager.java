@@ -79,7 +79,7 @@ public class GenericFileManager {
 
     // picks the right fromCsvRow() based on the class name
     // Client, Accommodation, and Transportation are supported
-    // Trip is not — TripFileManager handles that
+    // Trip is not. TripFileManager handles that
     @SuppressWarnings("unchecked")
     private static <T extends CsvPersistable> T fromCsvRow(String csvLine, Class<T> clazz)
             throws Exception {
