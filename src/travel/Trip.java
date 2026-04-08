@@ -21,12 +21,11 @@ import interfaces.Identifiable;    // A3: new import
 import interfaces.Billable;        // A3: new import
 import interfaces.CsvPersistable;  // A3: new import
 
-// A3: added "implements Identifiable, Billable, CsvPersistable, Comparable<Trip>"
-// A2: public class Trip {
+
 public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<Trip> {
 
 	// ================= ATTRIBUTES =================
-	// Unchanged from A2
+
 	private String        tripId;
 	private String        destination;
 	private int           numOfDays;
@@ -43,7 +42,6 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
 
 	// ================= VALIDATION HELPERS =================
-	// Unchanged from A2
 
 	private static void validateBasePrice(double price) throws InvalidTripDataException {
 		if (price < MIN_BASE_PRICE)
@@ -65,7 +63,6 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
 
 	// ================= CONSTRUCTORS =================
-	// Unchanged from A2
 
 	public Trip() {
 		this.tripId = "T" + nextId++;
@@ -107,7 +104,7 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
 
 	// ================= GETTERS =================
-	// Unchanged from A2
+
 	public String         getTripId()          { return tripId; }
 	public String         getDestination()     { return destination; }
 	public int            getDurationInDays()  { return numOfDays; }
@@ -131,7 +128,7 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
 
 	// ================= SETTERS =================
-	// Unchanged from A2
+
 	public void setDestination(String destination) { this.destination = destination; }
 	public void setTripId(String tripId)           { this.tripId = tripId; }
 
@@ -160,7 +157,6 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
 
 	// ================= BUSINESS METHODS =================
-	// Unchanged from A2
 
 	public String getTripType() {
 		if (transportation instanceof Flight) return "Flight Trip";
@@ -196,7 +192,7 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 	// ================= A3: Comparable<Trip> =================
 
 	// A3: new — defines natural ordering for Trip
-	// Business rule: highest revenue trips come first
+	// highest revenue trips come first
 	// Reversed comparison (other vs this) makes Collections.sort() produce descending order
 	@Override
 	public int compareTo(Trip other) {
@@ -205,7 +201,6 @@ public class Trip implements Identifiable, Billable, CsvPersistable, Comparable<
 
 
 	// ================= TO STRING / EQUALS =================
-	// Unchanged from A2
 
 	@Override
 	public String toString() {
