@@ -140,7 +140,7 @@ abstract public class Transportation
 	// ================= A3: Comparable<Transportation> =================
 
 	// A3: new — defines natural ordering for Transportation
-	// Business rule: premium (higher fare) transport comes first
+	// premium (higher fare) transport comes first
 	// Reversed comparison (other vs this) makes Collections.sort() produce descending order
 	// getBaseFare() is abstract so this works for Flight, Train, and Bus without casting
 	@Override
