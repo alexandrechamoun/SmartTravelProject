@@ -4,7 +4,7 @@
 //             Alexandre Chamoun - 40341371
 // -------------------------------------------------------------
 // Checked exception thrown when a Trip's attribute values
-// violate business rules (base price < $100, duration out of
+// (base price < $100, duration out of
 // 1-20 day range, or client ID not found in current array).
 
 package exceptions;
