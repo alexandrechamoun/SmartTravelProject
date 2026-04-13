@@ -735,7 +735,7 @@ public class SmartTravelDriver {
     // ===================== MENU 8: LOAD ALL DATA =====================
     private static void loadAllData(SmartTravelService service) {
         System.out.println("\nLoading all data from output/data/...");
-        service.loadAllData("output/data/");
+        service.loadAllData("data/");
         System.out.println("Load complete. Errors (if any) logged to output/logs/errors.txt.");
     }
 
@@ -743,7 +743,7 @@ public class SmartTravelDriver {
     // ===================== MENU 9: SAVE ALL DATA =====================
     private static void saveAllData(SmartTravelService service) {
         System.out.println("\nSaving all data to output/data/...");
-        service.saveAllData("output/data/");
+        service.saveAllData("data/");
         System.out.println("Save complete.");
     }
 
@@ -759,7 +759,7 @@ public class SmartTravelDriver {
 
         // ---- 1. Load existing data ----
         System.out.println("--- Step 1: Load data from CSV ---");
-        service.loadAllData("output/data/");
+        service.loadAllData("data/");
         System.out.println("After load: "
                 + service.getClientCount() + " clients, "
                 + service.getTripCount() + " trips.");
@@ -847,7 +847,7 @@ public class SmartTravelDriver {
 
         // ---- 4. Save updated data ----
         System.out.println("\n--- Step 4: Save data back to CSV ---");
-        service.saveAllData("output/data/");
+        service.saveAllData("data/");
 
         System.out.println("\n--- Step 5: Summary after scenario ---");
         System.out.println(service.getClientCount() + " clients, "
